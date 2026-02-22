@@ -1,0 +1,6 @@
+# See https://github.com/rhysd/actionlint#configuration
+# Suppress "Context access might be invalid: NPM_TOKEN" - NPM_TOKEN is a repo secret for npm publish
+paths:
+  ".github/workflows/publish.yml":
+    ignore:
+      - "Context access might be invalid.*"
