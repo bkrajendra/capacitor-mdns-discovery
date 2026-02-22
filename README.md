@@ -9,6 +9,50 @@ npm install capacitor-mdns-discovery
 npx cap sync
 ```
 
+### iOS
+
+For iOS, make sure you enable local network and Bonjour service discovery in your app’s `Info.plist`:
+
+```xml
+<key>NSLocalNetworkUsageDescription</key>
+<string>Discover devices on the local network.</string>
+<key>NSBonjourServices</key>
+<array>
+  <string>_http._tcp.</string>
+  <!-- Add any additional service types you intend to discover -->
+</array>
+```
+
+### Android
+
+No additional configuration is required beyond the standard Capacitor Android setup. Ensure your app includes network permissions (such as `INTERNET`) which are enabled by default in most Capacitor templates.
+
+## Build
+
+```bash
+npm install
+npm run lint
+npm run build
+```
+
+To fully verify the plugin and regenerate the API docs section below, run:
+
+```bash
+npm run verify
+```
+
+## Publishing
+
+This package is a standard Capacitor plugin and can be published to npm like any other npm package:
+
+```bash
+npm version patch   # or minor / major
+git push --follow-tags
+npm publish --access public
+```
+
+Alternatively, once you have configured an `NPM_TOKEN` secret in your GitHub repository, you can create a GitHub Release and let the `Publish to npm` workflow handle building and publishing for you.
+
 ## API
 
 <docgen-index>
@@ -145,13 +189,17 @@ removeAllListeners() => Promise<void>
 
 Construct a type with a set of properties K of type T
 
-<code>{ [P in K]: T; }</code>
+<code>{
+ [P in K]: T;
+ }</code>
 
 
 #### Pick
 
 From T, pick a set of properties whose keys are in the union K
 
-<code>{ [P in K]: T[P]; }</code>
+<code>{
+ [P in K]: T[P];
+ }</code>
 
 </docgen-api>
