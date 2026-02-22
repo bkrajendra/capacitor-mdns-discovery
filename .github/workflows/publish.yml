@@ -9,7 +9,9 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: read # Allows checking out the code
+      id-token: write # Required for OIDC authentication with npm
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
