@@ -9,14 +9,11 @@ on:
 permissions:
   contents: read # Allows checking out the code
   id-token: write # Required for OIDC authentication with npm
-  
+
 jobs:
   publish:
     runs-on: ubuntu-latest
     
-
-    env:
-      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -34,5 +31,5 @@ jobs:
         run: npm run build
 
       - name: Publish package
-        run: npm publish --access public
+        run: npm publish
 
