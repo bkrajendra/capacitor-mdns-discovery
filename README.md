@@ -2,6 +2,9 @@
 
 mDNS device discovery for IoT Devices
 
+[![CI](https://github.com/bkrajendra/capacitor-mdns-discovery/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/bkrajendra/capacitor-mdns-discovery/actions/workflows/ci.yml)
+
+
 ## Install
 
 ```bash
@@ -189,13 +192,17 @@ removeAllListeners() => Promise<void>
 
 Construct a type with a set of properties K of type T
 
-<code>{ [P in K]: T; }</code>
+<code>{
+ [P in K]: T;
+ }</code>
 
 
 #### Pick
 
 From T, pick a set of properties whose keys are in the union K
 
-<code>{ [P in K]: T[P]; }</code>
+<code>{
+ [P in K]: T[P];
+ }</code>
 
 </docgen-api>
