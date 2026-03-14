@@ -40,8 +40,7 @@ public class MdnsDiscoveryPlugin: CAPPlugin, CAPBridgedPlugin {
         call.resolve()
     }
 
-    public override func handleOnDestroy() {
-        super.handleOnDestroy()
+    deinit {
         discovery.stopAll()
     }
 }
