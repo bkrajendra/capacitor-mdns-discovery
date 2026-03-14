@@ -1,6 +1,6 @@
 {
   "name": "capacitor-mdns-discovery",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "mDNS device discovery for IoT Devices",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
