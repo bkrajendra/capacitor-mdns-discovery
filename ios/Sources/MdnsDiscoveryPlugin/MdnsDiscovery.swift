@@ -2,7 +2,8 @@ import Foundation
 import Network
 
 @objc public class MdnsDiscovery: NSObject, NetServiceBrowserDelegate, NetServiceDelegate {
-    private var browser: NetServiceBrowser?
+    // One browser per service type so we can scan multiple types at once.
+    private var browsers: [String: NetServiceBrowser] = [:]
     private var services: [String: NetService] = [:]
 
     @objc public var onDeviceFound: (([String: Any]) -> Void)?
@@ -10,25 +11,46 @@ import Network
     @objc public var onError: (([String: Any]) -> Void)?
 
     @objc public func startDiscovery(serviceType: String) {
-        stopAll()
-
         let normalizedType = serviceType.hasSuffix(".") ? serviceType : "\(serviceType)."
+
+        // If we're already browsing this type, do nothing.
+        if browsers[normalizedType] != nil {
+            return
+        }
 
         let browser = NetServiceBrowser()
         browser.delegate = self
-        self.browser = browser
-
+        browsers[normalizedType] = browser
         browser.searchForServices(ofType: normalizedType, inDomain: "local.")
     }
 
     @objc public func stopDiscovery(serviceType: String?) {
-        stopAll()
+        guard let serviceType else {
+            stopAll()
+            return
+        }
+
+        let normalizedType = serviceType.hasSuffix(".") ? serviceType : "\(serviceType)."
+        if let browser = browsers[normalizedType] {
+            browser.stop()
+            browser.delegate = nil
+            browsers.removeValue(forKey: normalizedType)
+        }
+
+        // Stop monitoring any services for this type.
+        let keysToRemove = services.keys.filter { $0.hasSuffix(".\(normalizedType)") }
+        for key in keysToRemove {
+            services[key]?.stopMonitoring()
+            services.removeValue(forKey: key)
+        }
     }
 
     @objc public func stopAll() {
-        browser?.stop()
-        browser?.delegate = nil
-        browser = nil
+        browsers.values.forEach {
+            $0.stop()
+            $0.delegate = nil
+        }
+        browsers.removeAll()
         services.values.forEach { $0.stopMonitoring() }
         services.removeAll()
     }
@@ -93,6 +115,7 @@ import Network
     }
 
     private func serviceKey(for service: NetService) -> String {
-        return "\(service.name).\((service.type))"
+        // Include type so services don't collide across browsers.
+        return "\(service.name).\(service.type)"
     }
 }
